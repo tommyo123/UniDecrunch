@@ -1,0 +1,29 @@
+# Generic 4: catch-all for depack stubs anywhere below $0800.
+#
+# Matches any bootstrap that ends with JMP into $02xx-$07xx and is evaluated
+# after all the specific families (and retried via fall-through when one of
+# them matched but failed). Phase 1 simply waits for the PC to dive below
+# $0800; phase 2 ends when it comes back up into the unpacked program.
+
+name = "Generic 4"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+any_of = [
+    "*128 4C ?? 02",
+    "*128 4C ?? 03",
+    "*128 4C ?? 04",
+    "*128 4C ?? 05",
+    "*128 4C ?? 06",
+    "*128 4C ?? 07",
+]
+
+[run]
+stop_below = 0x0800
+exit_above = 0x0800
+exit_into_written = true
+use_guess_start = true
+# multi-stage members jump through their own output mid-depack:
+exit_quiescent = 500000

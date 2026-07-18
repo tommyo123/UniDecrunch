@@ -1,0 +1,20 @@
+# Generic cruncher family: depack stub relocated to $0010 (zero page).
+#
+# Byte Boozer is the classic member: it depacks forward through a zero-page
+# pointer at $77, so if the trace shows a forward (zp),Y range with base $77,
+# the range (and the final pointer value) give the exact output boundaries.
+
+name = "Generic at $0010"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C 10 00"
+
+[run]
+stop_pc = 0x0010
+exit_above = 0x0100
+byteboozer_ptr = 0x77
+byteboozer_end_from_ptr = true
+byteboozer_name = "Byte Boozer"

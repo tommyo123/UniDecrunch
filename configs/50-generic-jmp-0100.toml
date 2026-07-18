@@ -1,0 +1,73 @@
+# Generic cruncher family: depack stub relocated to $0100 (the stack page).
+#
+# Detection: somewhere in the first 768 bytes after $0801 the bootstrap ends
+# with JMP $0100 (or $0101). Execution starts at the BASIC SYS address.
+#
+# The generic engine then runs phase 1 (until PC = $0100/$0101), turns on write
+# tracing and runs phase 2 until the PC jumps above $0800 into the unpacked
+# program. The largest traced write range is the unpacked data.
+#
+# analyze_0100 additionally classifies the *behavior*: Time Cruncher 5.x-6.x
+# and Cruel Cruncher both show a signature two-range write picture (a short
+# forward abs,X tail copy + a long backward (zp),Y depack) distinguished by the
+# average PC of the depack loop. See engine/generic.rs for the details.
+#
+# The [[variant]] patterns below refine the name for older Time Crunchers that
+# also use a $0100 stub; the last matching variant wins.
+
+name = "Generic at $0100"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+any_of = [
+    "*768 4C 00 01",
+    "*768 4C 01 01",
+]
+
+[run]
+stop_pc = [0x0100, 0x0101]
+exit_above = 0x0800
+# Decrunchers that also rewrite the load-address bytes right below $0801:
+snap_start = [0x07F7, 0x0800]
+snap_to = 0x0801
+analyze_0100 = true
+
+[[variant]]
+# Time Cruncher 4.2+: setup probe at $0817; the depacked data starts 10 bytes
+# into the largest range.
+name = "Time Cruncher v4.2+"
+base = 0x0817
+start_adjust = 10
+pattern = [
+    "A9 01 8D 86 02 20 44 E5 78 *256 20 34 03 A4 A7 84 A9 85 A8 A5 FE 85 F7 A5",
+    "FF 85 F8 20 7C 03 A5 F7 85 FE A5 F8 85 FF 20 77 03 B0",
+]
+
+[[variant]]
+name = "Time Cruncher v4.0"
+base = 0x0940
+pattern = [
+    "*32 A2 08 20 34 03 D0 E5 A9 00 85 F6 A4 FB F0 0C 06 FA 2A 26 F6 C6 FB CA",
+    "D0 F2 A8 60 48 B1 FE 85 FA A9 08 85 FB 68 E6 01 20 00 04 C6 01 E6 FE D0",
+    "DF",
+]
+
+[[variant]]
+name = "Time Cruncher v4.5+"
+base = 0x084E
+start_adjust = 1
+pattern = [
+    "20 34 03 C9 ?? F0 05 18 69 ?? D0 16 E8 20 34 03 C9 ?? F0 05 18 69 ?? D0",
+    "09 A2 ?? 20 34 03 A4 A7 84 A9 85 A8 A5 FE 85 F7 A5 ?? 85 F8 20 79 03 A5",
+]
+
+[[variant]]
+name = "Time Cruncher v3.0"
+base = 0x08A3
+pattern = [
+    "18 69 ?? 10 05 A2 0A 20 34 03 85 F7 A5 F6 85 F8 A5 FE 85 FC A5 ?? 85 FD",
+    "20 6B 03 A5 FD 85 ?? A5 FC 85 FE A2 ?? 20 34 03 4A B0 37 D0 1E A2 ?? 20",
+    "34 03 A0 ?? 84 F7 85 F5 38 A5 2D E5 F5 85 FC A5",
+]

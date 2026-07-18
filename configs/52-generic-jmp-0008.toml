@@ -1,0 +1,17 @@
+# Generic cruncher family: depack stub relocated to $0008 (zero page).
+#
+# Byte Boozer variants living at $08 use a zero-page output pointer at $04.
+
+name = "Generic at $0008"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C 08 00"
+
+[run]
+stop_pc = 0x0008
+exit_above = 0x0400
+byteboozer_ptr = 0x04
+byteboozer_name = "Byte Boozer"

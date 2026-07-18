@@ -1,0 +1,9 @@
+[package]
+name = "mos6510"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "MOS 6510 (NMOS 6502) emulator core with C64 memory banking, full illegal-opcode support and per-instruction memory-access tracking"
+
+[dependencies]

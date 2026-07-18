@@ -1,0 +1,20 @@
+# Generic cruncher family: depack stub relocated to $0410.
+#
+# Seen in ByteBonker 1.5, ByteBlaster 1.1, DarkPacker 2.0, FastCruel 2.5.1,
+# bronx packer 1.0 and "4code zipper 2.0": the bootstrap at $080D clears the
+# screen, prints a WAIT message, copies two pages to $0410-$060F and does
+# JMP $0410. The unpacked start address is derived with the BASIC-aware
+# guess_start heuristic, like the $0400 family.
+
+name = "Generic at $0410"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C 10 04"
+
+[run]
+stop_pc = 0x0410
+exit_above = 0x0700
+use_guess_start = true

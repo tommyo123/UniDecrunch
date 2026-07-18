@@ -1,0 +1,24 @@
+# Generic cruncher family: bootstrap jumps to $0334 (the tape buffer).
+#
+# These typically copy a second stage to $0334 which relocates the real
+# depacker to $0100, so phase 1 still waits for PC = $0100.
+
+name = "Generic at $0334"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C 34 03"
+
+[run]
+stop_pc = 0x0100
+exit_above = 0x0400
+
+[[variant]]
+name = "The Super Cruncher"
+base = 0x0855
+pattern = [
+    "4C 34 03 A2 00 86 FE 0A F0 20 90 3C A2 06 0A F0 2B 26 FE CA D0 F8 A6 FE",
+    "48 BD ?? ?? 8D ?? ?? 68",
+]

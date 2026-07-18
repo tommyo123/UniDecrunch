@@ -1,0 +1,39 @@
+# CrunchAB v1.0
+#
+# Two-stage detection: the BASIC stub at $0801 must match, then the cruncher is
+# actually *run* until it has relocated its depack loop to $0340, where the
+# relocated body is verified. The probe also captures the end address the
+# cruncher keeps at $040E/$040F.
+#
+# The crunchab engine then continues execution until the depacker is done
+# (PC = $040A) and reads the run address from $040B/$040C and the data start
+# from $040E/$040F (+1).
+
+name = "CrunchAB v1.0"
+engine = "crunchab"
+
+[detect]
+base = 0x0801
+# The six bytes after SEI are the VIC border/screen pokes (INC $D030, LSR
+# $D011), patched to NOPs in some distributions, so they are wildcarded.
+# The [probe] below verifies the relocated depacker anyway.
+pattern = [
+    "0C 08 C9 07 9E ?? AC 36 35 36 00 A0 00 78 ?? ?? ?? ?? ?? ?? E6 01 B9 ??",
+    "?? 99 40 03 C8 D0 F7 4C 40 03",
+]
+
+[probe]
+entry = 0x080E        # skip the BASIC line, start at the machine-code stub
+target = 0x0340       # run until the relocated depack loop is reached
+cap = 2000000         # instruction budget for the probe
+end_ptr = 0x040E      # end address of the crunched data lives here (lo/hi)
+verify_base = 0x0340  # the relocated code must look like this:
+verify_pattern = [
+    "B9 ?? ?? 99 ?? ?? C8 D0 F7 C6 01 ?? ?? 8D 20 D0 E6 01 88 20 1C 04 F0 0B",
+    "A2 08 20 CA 03 20 0D 04 88 D0 F5 A0 1F 20 1C 04 A2 04 88 84 FB F0 33 CA",
+    "C0 02 B0 06 CA 20 CA 03 10 06 20 CA 03 18 69 04 A8 B9 63 07 AA 20 CA 03",
+    "18 79 70 07 AA A5 FD 79 7D 07 85 FD D0 0F C0 ?? 90 0B E0 ?? D0 07 A9 ??",
+    "D0 DE 20 CA 03 8A 18 6D 0E 04 AA A5 FD 6D 0F 04 A8 8A 38 E5 FB 85 FC 98",
+    "E9 00 85 FD A4 FB C8 B1 FC 20 0D 04 88 D0 F8 4C 49 03 A9 ?? 85 FC 85 FD",
+    "8A F0 27 A9 ?? D0 16 AD E8 03 D0 03 CE E9 03 CE E8 03 A9 08 8D",
+]

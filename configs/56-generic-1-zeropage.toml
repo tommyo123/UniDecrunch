@@ -1,0 +1,27 @@
+# Generic 1: zero-page stub family.
+#
+# Covers every cruncher whose bootstrap ends with JMP $00xx: the depack stub
+# is copied over the bottom of zero page and the whole depack loop runs below
+# $0100. Known members include GNT Packer 2, IDT Packer 2.1, Stat-Packer, a
+# Time Cruncher 4.2 repack, Beeftrucker and Speedpacker 1.2, but the name stays
+# generic, since a crunched file says nothing about which cruncher produced it.
+#
+# stop_below makes phase 1 family-wide: the first time the PC dives below
+# $0100 the relocated stub has taken over, whatever its exact entry is.
+
+name = "Generic 1"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C ?? 00"
+
+[run]
+stop_below = 0x0100
+exit_above = 0x0100
+use_guess_start = true
+# several members chain further stages after the first jump above $0100
+# (e.g. a repack that wipes memory to $CFFF and rebuilds its BASIC line
+# afterwards), so run until the writes stop:
+exit_quiescent = 500000

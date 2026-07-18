@@ -1,0 +1,33 @@
+# Time Cruncher 4.2
+#
+# BASIC line "2051", depacker copied to $FA/$0333. Like 3.x it keeps the output
+# pointer at $FC/$FD, but the finish point and address math differ (version =
+# 42): the engine runs to $0100 for the end address, then to $0374 where
+# start = word[$FC]+3+Y and the run address is taken from $0375/$0376.
+
+name = "Time Cruncher 4.2"
+engine = "timecruncher"
+
+[detect]
+base = 0x0801
+entry = 0x0803
+pattern = [
+    "?? 08 D0 06 9E 32 30 35 31 00 A2 00 78 EE 30 D0 86 01 BD 31 08 9D FA 00",
+    "E0 AB B0 06 BD 22 09 9D 33 03 CA D0 ED A9 ?? 85 2D A9 ?? 85 2E 4C AD 03",
+    "?? ?? ?? ?? ?? ?? 20 77 03 90 4C 20 77 03 B0 04 A9 ?? D0 2E 20 34 03 C9",
+    "03 F0 05 18 69 02 D0 22 20 34 03 C9 ?? F0 05 18 69 05 D0 16 E8 20 34 03",
+    "C9 07 F0 05 18 69 08 D0 09 A2 ?? 20 34 03 A4 A7 84 A9 85 A8 A5 FE 85 F7",
+    "A5 ?? 85 F8 20 7C 03 A5 F7 85 FE A5 F8 85 ?? 20 77 03 B0 39 20 77 03 B0",
+    "07 A2 06 20 34 03 10 0C A2 09 20 34 03 18 69 40 90 02 E6 A7 A0 ?? 84 A8",
+    "85 A6 18 A5 FC 65 A6 85 F7 A5 FD 65 A7 85 F8 A5 F7 D0 02 C6 F8 C6 F7 20",
+    "87 03 4C 00 01 20 77 03 B0 36 A9 ?? 85 A8 20 77 03 B0 1A A2 ?? A9 ?? A0",
+    "?? 85 02 84 03 20 34 03 18 65 02 85 A6 A5 A7 65 03 85 A7 90 BD 20 77 03",
+    "B0 06 A9 ?? A2 ?? D0 DF A9 ?? A0 ?? A2 ?? D0 D9 20 77 03 B0 09 20 77 03",
+    "A9 ?? 69 04 D0 BE 20 77 03 B0 08 20 34 03 18 69 06 D0 B1 A2 08 20 34 03",
+    "D0 AA A9 00 85 A7 06 FB F0 09 2A 26 A7 CA D0 F6 A2 02 60 A0 ?? 2C A0 7B",
+    "8C 64 03 48 A0 00 B1 FE A4 FE D0 02 C6 ?? C6 FE C0 E7 F0 08 38 2A 85 FB",
+    "68 4C 3C 03 A4 ?? C0 07 D0 F2 A9 ?? 85 01 CE 30 D0 58",
+]
+
+[run]
+version = 42

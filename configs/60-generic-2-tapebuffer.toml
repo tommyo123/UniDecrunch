@@ -1,0 +1,23 @@
+# Generic 2: tape-buffer stub with helpers below $0500.
+#
+# Same JMP $0334 signature as "Generic at $0334", but a different runtime
+# shape: the depacker executes from $0334-$04xx WITH helper routines in zero
+# page, never touching $0100, and may show a "press space" screen before
+# moving the unpacked program into place (the emulator's stubbed GETIN always
+# returns space, so that wait passes). Tried automatically when the plain
+# $0334 engine fails, thanks to detection fall-through.
+
+name = "Generic 2"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C 34 03"
+
+[run]
+stop_pc = 0x0334
+exit_above = 0x0500
+use_guess_start = true
+# this family depacks to top of RAM and page-copies down:
+trim_page_overshoot = true

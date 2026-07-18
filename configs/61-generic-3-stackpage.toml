@@ -1,0 +1,22 @@
+# Generic 3: stack-page/zero-page helpers with depack code in the file area.
+#
+# Catches bootstraps that jump into the stack page at an address the specific
+# "$0100"-family config does not cover (that one only accepts $0100/$0101 and
+# is evaluated first). A known member enters at JMP $0127, keeps its depack
+# loop in the original file area ($08xx), and only puts the inner helpers below
+# $0200, so the phase-2 exit additionally requires the PC to land in freshly
+# written memory (the unpacked program).
+
+name = "Generic 3"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+pattern = "*128 4C ?? 01"
+
+[run]
+stop_below = 0x0200
+exit_above = 0x0800
+exit_into_written = true
+use_guess_start = true

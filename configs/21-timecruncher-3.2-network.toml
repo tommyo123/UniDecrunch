@@ -1,0 +1,29 @@
+# Time Cruncher 3.2 "Network" (Tristar '88 build)
+#
+# Same depacker layout as 3.1 Network (the engine runs it identically,
+# version = 31); only the BASIC line and a few self-modified bytes differ.
+
+name = "Time Cruncher 3.2 Network (Tristar)"
+engine = "timecruncher"
+
+[detect]
+base = 0x0801
+entry = 0x0818
+pattern = [
+    "?? 08 CF 07 9E 32 30 37 32 20 54 52 49 53 54 41 52 27 38 38 00 00 00 78",
+    "A9 ?? 85 01 A0 C4 B9 3C 08 99 F8 00 E0 83 B0 06 B9 FD 08 99 ?? ?? 88 D0",
+    "ED A9 ?? 85 2D A9 ?? 85 2E 4C 00 01 ?? ?? ?? ?? ?? ?? ?? ?? ?? 09 99 E8",
+    "07 C8 D0 F7 EE 02 01 EE 05 01 C6 F9 D0 ED A2 ?? 20 34 03 F0 33 C9 ?? D0",
+    "16 A2 ?? 20 34 03 D0 0A A2 ?? 20 34 03 18 69 07 10 05 A2 ?? 20 34 03 85",
+    "A8 A5 A7 85 A9 A5 FE 85 F7 A5 ?? 85 F8 20 6C 03 A5 F8 85 ?? A5 F7 85 FE",
+    "E8 20 34 03 D0 1E A2 08 20 34 03 A0 ?? 84 A8 85 A6 18 A5 FC 65 A6 85 F7",
+    "A5 FD 65 A7 85 F8 20 6C 03 4C 13 01 E8 20 34 03 D0 1C A0 ?? 84 A8 E8 20",
+    "34 03 F0 08 A2 ?? 20 34 03 4C 5C 01 A2 ?? 20 34 03 E6 A7 4C 5C 01 E8 20",
+    "34 03 D0 0A E8 20 34 03 18 69 04 A8 D0 D6 E8 20 34 03 D0 0A A2 ?? 20 34",
+    "03 18 69 06 D0 ED A2 08 20 34 03 D0 E6 A9 00 85 A7 A4 FB F0 0C 06 FA 2A",
+    "26 A7 C6 FB CA D0 F2 A8 60 48 B1 FE 85 FA A9 ?? 85 FB 68 A4 FE D0 02 C6",
+    "?? C6 FE C0 ?? D0 DE A4 ?? C0 ?? D0 D8 A9 ?? 85 01 58",
+]
+
+[run]
+version = 31

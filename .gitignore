@@ -1,0 +1,39 @@
+# Rust build output
+/target/
+
+# Auto-generated lockfile, not tracked for this project
+Cargo.lock
+
+# Local hidden files and directories, except checked-in tooling config
+.*
+!.gitignore
+!.gitattributes
+!.github/
+!.github/**
+!.cargo/
+!.cargo/**
+
+*.prg
+*.s
+
+# Local build byproducts
+*.tmp
+*.bak
+*.log
+*.swp
+*.swo
+
+# OS metadata
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor and tool caches
+*.rs.bk
+
+# Release artifacts
+*.exe
+*.dll
+*.zip
+*.tar.gz
+decrunched/

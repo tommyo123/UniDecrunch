@@ -1,0 +1,26 @@
+# Generic 6: last-resort catch-all.
+#
+# No signature at all: any BASIC program with a SYS line qualifies, so this
+# MUST stay last. Phase 1 waits for the PC to dive below $0800 (the relocated
+# depack stub taking over, wherever it is); phase 2 ends when execution comes
+# back up into memory the depacker itself wrote (the unpacked program).
+# Adjacent output segments are merged, so depackers that split the payload
+# between two copy loops (a backwards range plus a forwards range) still come
+# out as one program.
+
+name = "Generic 6"
+engine = "generic"
+
+[detect]
+always = true
+entry = "sys"
+
+[run]
+stop_below = 0x0800
+exit_above = 0x0800
+exit_into_written = true
+use_guess_start = true
+# nested multi-stage depackers jump through their own output while unpacking;
+# only "the writes stopped" reliably marks the end (first plausible hand-off
+# jump becomes the run address):
+exit_quiescent = 500000

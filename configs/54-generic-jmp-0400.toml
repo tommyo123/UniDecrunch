@@ -1,0 +1,38 @@
+# Generic cruncher family: depack stub relocated to $0400 (or $040B).
+#
+# Sledge Hammer is the classic member. The unpacked start address is derived
+# with the BASIC-aware guess_start heuristic: exact $0801 wins; a visible SYS
+# line or the classic $xx08 line pointer at $0802 means $0801; otherwise the
+# first non-zero byte of the written range is used (zero padding skipped).
+
+name = "Generic at $0400"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+any_of = [
+    "*128 4C 00 04",
+    "*128 4C 0B 04",
+]
+
+[run]
+stop_pc = [0x0400, 0x040B]
+exit_above = 0x0700
+use_guess_start = true
+
+[[variant]]
+name = "Sledge Hammer v1"
+base = 0x0810
+pattern = [
+    "78 A9 00 8D 20 D0 85 01 A0 05 BE EA 08 96 2D 88 10 F8 B9 ?? ?? 99 ?? ??",
+    "88 D0 F7 A2 ?? 4C 00 04",
+]
+
+[[variant]]
+name = "Sledge Hammer v2"
+base = 0x080D
+pattern = [
+    "78 A2 0D A0 78 84 01 B9 31 08 99 ?? 03 88 D0 F7 B9 ?? ?? 99 ?? ?? 88 D0",
+    "F7 CE 1F 08 CE 22 08 CA D0 EE 4C 0B 04",
+]

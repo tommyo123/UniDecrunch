@@ -1,0 +1,21 @@
+[package]
+name = "unidecrunch"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Detects and unpacks C64 cruncher/packer formats by running them in a 6510 emulator and analyzing memory writes"
+
+[dependencies]
+mos6510 = { path = "../mos6510" }
+
+# GUI example dependencies, pulled in only with `--features gui`.
+eframe = { version = "0.29", optional = true }
+rfd = { version = "0.15", optional = true }
+
+[features]
+gui = ["dep:eframe", "dep:rfd"]
+
+[[example]]
+name = "gui"
+required-features = ["gui"]

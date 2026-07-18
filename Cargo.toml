@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/mos6510",
+    "crates/unidecrunch",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/tommyo123-dev/UniDecrunch"
+
+[profile.release]
+opt-level = 3
+lto = true

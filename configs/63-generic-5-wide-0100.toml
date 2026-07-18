@@ -1,0 +1,23 @@
+# Generic 5: JMP $0100 anywhere in the file (wide search window).
+#
+# The specific "$0100" family only searches the first 768 bytes after $0801;
+# some crunchers put their bootstrap at the END of the file instead. This
+# definition searches the whole file. Evaluated late, so the precise families
+# keep priority.
+
+name = "Generic 5"
+engine = "generic"
+
+[detect]
+base = 0x0801
+entry = "sys"
+any_of = [
+    "*65000 4C 00 01",
+    "*65000 4C 01 01",
+]
+
+[run]
+stop_pc = [0x0100, 0x0101]
+exit_above = 0x0800
+exit_into_written = true
+use_guess_start = true
